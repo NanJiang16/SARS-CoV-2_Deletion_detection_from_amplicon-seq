@@ -1,4 +1,4 @@
-# DVG pilot project with UW–Madison swab samples and control data
+# Deletion detection in SARS-CoV-2 genomes using multiplex-PCR sequencing from COVID-19 patients: elimination of false positives
 
 ## Scripts
 
