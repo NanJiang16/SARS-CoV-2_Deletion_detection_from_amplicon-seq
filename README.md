@@ -8,7 +8,7 @@
 * `standardize_alignments.py` - Standardizes the deletion positions within alignments.
 * `annotate_alignment_with_primers.py` - Annotates an alignment file with information about the closest upstream/downstream primer to each read as well as the fraction of the read's alignment that is to primer regions.
 * `extract_primer_info.py` - Extracts primer information from a primer-annotated alignment file.
-* `summmarize_deletions.R` - Summarizes read deletions (output from `extract_deletions.py`) and calculates their frequencies using coverage information.
+* `deletion_summarization_and_further_filtration.R` - Summarizes read deletions (output from `extract_deletions.py`), calculates their frequencies using coverage information, and exclude deletion junctions with: Frequency < 0.01, Depth < 5, MinCov (smaller depth at the deletion start and stop positions) < 21, Maximum overhang on either end ('max_right_overhang' or 'max_left_overhang') < 31, Depth of positive or negative strands < 3.
 
 ## Python modules
 
@@ -42,7 +42,7 @@ python3 extract_deletions.py ./ViReMa25_SARS2_${name}/filtered_ViReMa25_SARS2_st
 samtools view -S -b ViReMa25_SARS2_${name}_recombinations.sam > ViReMa25_SARS2_${name}_recombinations.bam 
 samtools sort ViReMa25_SARS2_${name}_recombinations.bam -o ViReMa25_SARS2_${name}_recombinations.sorted.bam
 samtools depth -a -m 0 ViReMa25_SARS2_${name}_recombinations.sorted.bam > ViReMa25_SARS2_${name}_recombinations.coverage
-# Further Filters were applied to exclude deletion junctions with: Frequency < 0.01, Depth < 5, MinCov (smaller depth at the deletion start and stop positions) < 21, Maximum overhang on either end ('max_right_overhang' or 'max_left_overhang') < 31, Depth of positive or negative strands < 3 in R.
+# Further Filters were applied with `deletion_summarization_and_further_filtration.R` to exclude deletion junctions with: Frequency < 0.01, Depth < 5, MinCov (smaller depth at the deletion start and stop positions) < 21, Maximum overhang on either end ('max_right_overhang' or 'max_left_overhang') < 31, Depth of positive or negative strands < 3.
 
 ```
 
@@ -69,6 +69,6 @@ python3 extract_deletions.py filtered_${name}_annotated_standardizationAligned.o
 # Calculate coverage of the alignment file
 samtools sort filtered_${name}_annotated_standardizationAligned.out.bam -o filtered_${name}_annotated_standardizationAligned.out.sorted.bam
 samtools depth -a -m 0 filtered_${name}_annotated_standardizationAligned.out.sorted.bam > filtered_${name}_annotated_standardizationAligned.out.sorted.coverage
-# Further Filters were applied to exclude deletion junctions with: Frequency < 0.01, Depth < 5, MinCov (smaller depth at the deletion start and stop positions) < 21, Maximum overhang on either end ('max_right_overhang' or 'max_left_overhang') < 31, Depth of positive or negative strands < 3 in R.
+# Further Filters were applied with `deletion_summarization_and_further_filtration.R` to exclude deletion junctions with: Frequency < 0.01, Depth < 5, MinCov (smaller depth at the deletion start and stop positions) < 21, Maximum overhang on either end ('max_right_overhang' or 'max_left_overhang') < 31, Depth of positive or negative strands < 3.
 
 ```
