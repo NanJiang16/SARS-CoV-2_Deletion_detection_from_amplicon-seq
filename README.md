@@ -30,3 +30,14 @@ samtools view -S -b ViReMa25_SARS2_${name}_recombinations.sam > ViReMa25_SARS2_$
 samtools sort ViReMa25_SARS2_${name}_recombinations.bam -o ViReMa25_SARS2_${name}_recombinations.sorted.bam
 samtools depth -a -m 0 ViReMa25_SARS2_${name}_recombinations.sorted.bam > ViReMa25_SARS2_${name}_recombinations.coverage
 ```
+STAR (v2.7.3a)
+```bash
+~/TrimGalore-0.4.3/trim_galore --stringency 3 -q 30 -e .10 --length 15 --paired ./${SRA}/${SRA}_1.fastq ./${SRA}/${SRA}_2.fastq
+STAR --readFilesIn ./${SRA}_1_val_1.fq ./${SRA}_2_val_2.fq --outFileNamePrefix ${name} --genomeDir ./Genome_Dir --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outSJfilterOverhangMin 12 12 12 12 --outSJfilterCountUniqueMin 1 1 1 1 --outSJfilterCountTotalMin 1 1 1 1 --outSJfilterDistToOtherSJmin 0 0 0 0 --outFilterMismatchNmax 999 --outFilterMismatchNoverReadLmax 0.04 --scoreGapNoncan -4 --scoreGapATAC -4 --chimScoreJunctionNonGTAG 0 --chimOutType Junctions WithinBAM HardClip --alignSJstitchMismatchNmax -1 -1 -1 -1 --alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000
+python3 standardize_alignments.py NC_045512.2.fasta ${name}Aligned.out.sam > ${name}_standardizationAligned.out.bam
+python3 annotate_alignment_with_primers.py ARTIC_primers_v3.bed ${name}_standardizationAligned.out.bam > ${name}_annotated_standardization_Aligned.out.bam
+python3 filter_aligned_reads.py ARTIC_primers_v3.bed ${name}_annotated_standardization_Aligned.out.bam --min-deletion-length 20 --max-overhang-primer-frac 1 --min-aligned-length 75 --primer-pool-matching --max-primer-dist 1 > filtered_${name}_annotated_standardizationAligned.out.bam
+samtools sort filtered_${name}_annotated_standardizationAligned.out.bam -o filtered_${name}_annotated_standardizationAligned.out.sorted.bam
+samtools depth -a -m 0 filtered_${name}_annotated_standardizationAligned.out.sorted.bam > filtered_${name}_annotated_standardizationAligned.out.sorted.coverage 
+python3 extract_deletions.py filtered_${name}_annotated_standardizationAligned.out.sorted.bam --primer-bed ARTIC_primers_v3.bed --min-deletion-length 20 --ignore-secondary > filtered_${name}_annotated_standardizationAligned.deletion.sorted.txt
+```
