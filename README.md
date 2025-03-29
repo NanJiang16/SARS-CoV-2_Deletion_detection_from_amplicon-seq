@@ -18,7 +18,7 @@ The above scripts rely on the following Python module files:
 * `dvg.py` - Utility functions for extracting deletions from alignments and comparing with primer information.
 
 ## Usage examples 
-ViReMa (v0.25)
+Filtration and standardization in combination with ViReMa (v0.25) including preprocess with Trimmomatic (0.39)
 ```bash
 java -jar Trimmomatic-0.39/trimmomatic-0.39.jar PE ${name}_R1.fastq.gz ${name}_R2.fastq.gz output_${name}_paired_R1.fastq output_${name}_unpaired_R1.fastq output_${name}_paired_R2.fastq output_${name}_unpaired_R2.fastq ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:75 
 python3 interleave_paired_end_fastq.py output_${name}_paired_R1.fastq output_${name}_paired_R2.fastq > interleaved_${name}.fastq
@@ -30,7 +30,7 @@ samtools view -S -b ViReMa25_SARS2_${name}_recombinations.sam > ViReMa25_SARS2_$
 samtools sort ViReMa25_SARS2_${name}_recombinations.bam -o ViReMa25_SARS2_${name}_recombinations.sorted.bam
 samtools depth -a -m 0 ViReMa25_SARS2_${name}_recombinations.sorted.bam > ViReMa25_SARS2_${name}_recombinations.coverage
 ```
-STAR (v2.7.3a)
+Filtration and standardization in combination with STAR (v2.7.3a) including preprocess with TrimGalore (0.4.3)
 ```bash
 ~/TrimGalore-0.4.3/trim_galore --stringency 3 -q 30 -e .10 --length 15 --paired ./${SRA}/${SRA}_1.fastq ./${SRA}/${SRA}_2.fastq
 STAR --readFilesIn ./${SRA}_1_val_1.fq ./${SRA}_2_val_2.fq --outFileNamePrefix ${name} --genomeDir ./Genome_Dir --outFilterType BySJout --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outSJfilterOverhangMin 12 12 12 12 --outSJfilterCountUniqueMin 1 1 1 1 --outSJfilterCountTotalMin 1 1 1 1 --outSJfilterDistToOtherSJmin 0 0 0 0 --outFilterMismatchNmax 999 --outFilterMismatchNoverReadLmax 0.04 --scoreGapNoncan -4 --scoreGapATAC -4 --chimScoreJunctionNonGTAG 0 --chimOutType Junctions WithinBAM HardClip --alignSJstitchMismatchNmax -1 -1 -1 -1 --alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000
