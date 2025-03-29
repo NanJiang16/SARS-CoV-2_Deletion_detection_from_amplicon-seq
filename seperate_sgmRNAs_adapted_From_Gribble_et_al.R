@@ -114,26 +114,10 @@ process_file <- function(file) {
   write.table(df_sgmRNA, file = paste0(gsub(".txt", "", file), "_sgmRNAs.txt"), sep = "\t", row.names = FALSE)
   write.table(df_alt_summary, file = paste0(gsub(".txt", "", file), "_alt_sgmRNA_summary.txt"), sep = "\t", row.names = FALSE)
   write.table(df_DVG, file = paste0(gsub(".txt", "", file), "_DVGs.bed.txt"), sep = "\t", row.names = FALSE, quote = FALSE)
-  data_graph1 <- ggplot(df_DVG, aes(end, start, alpha = logFreq)) + 
-    geom_point(size = 2, color = "blue") + 
-    theme_linedraw(base_size = 20) + 
-    ylim(0, 31500) + xlim(0, 31500) + 
-    theme(panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank(), 
-          legend.title = element_blank(), 
-          legend.text = element_text(size = 11), 
-          legend.position = c(0.15, 0.63)) + 
-    labs(x = "Stop Position (nt)", y = "Start Position (nt)")
-  
-  print(data_graph1 + 
-          scale_alpha_continuous(limits = c(-5, 0), 
-                                 breaks = seq(-5, 0, by = 1), 
-                                 labels = c("-5.0", "-4.0", "-3.0", "-2.0", "-1.0", "0"))
-  )
   
 }
 # List all .txt files in the current directory
-files <- list.files(pattern = "*_65_20_1_75_0.01_5_20_2_34.txt")
+files <- list.files(pattern = "*_0.01_5_20_2_34.txt.txt")
 
 # Apply the function to each file
 lapply(files, process_file)
