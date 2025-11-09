@@ -19,6 +19,35 @@ The above scripts rely on the following Python module files:
 
 ## Usage examples 
 The pipeline starts in Conda enviroment. The following command lines examplify the workflow.
+To set up the same software environment on your own system:
+```bash
+# 1. Install Miniconda or Anaconda if not already installed
+#    https://docs.conda.io/en/latest/miniconda.html
+
+# 2. Create a new environment named "python3" with Python 3.10
+conda create -y -n python3 python=3.10
+
+# 3. Activate the environment
+conda activate python3
+
+# 4. Configure channels
+conda config --add channels r
+conda config --add channels bioconda
+conda config --add channels conda-forge
+
+# 5. Install tools and libraries
+conda install -y -c conda-forge mamba
+mamba install -y star=2.7.3a samtools=1.10
+conda install -y -c bioconda bedtools
+conda install -y pysam pandas numpy
+conda install -y -c conda-forge openjdk perl perl-json
+
+# 6. Verify installation
+python --version
+star --version
+samtools --version | head -1
+bedtools --version
+
 Filtration and standardization in combination with ViReMa (v0.25) including preprocess with Trimmomatic (0.39)
 ```bash
 # Raw reads were processed to remove Illumina TruSeq adapters using Trimmomatic (v0.39). Reads shorter than 75 bp were discarded, and low-quality bases (Q score < 30) were trimmed. 
