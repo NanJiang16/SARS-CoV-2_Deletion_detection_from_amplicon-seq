@@ -47,7 +47,7 @@ python --version
 star --version
 samtools --version | head -1
 bedtools --version
-
+```
 Filtration and standardization in combination with ViReMa (v0.25) including preprocess with Trimmomatic (0.39)
 ```bash
 # Raw reads were processed to remove Illumina TruSeq adapters using Trimmomatic (v0.39). Reads shorter than 75 bp were discarded, and low-quality bases (Q score < 30) were trimmed. 
