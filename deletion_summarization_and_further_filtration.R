@@ -6,7 +6,8 @@ library(ggplot2)
 # -----------------------------
 # STEP 1: Summarize recombination data
 # -----------------------------
-recomb_files <- list.files(pattern = "*recombinations.sorted.txt")
+
+recomb_files <- list.files(pattern = "*.sorted.txt")  
 
 process_file <- function(file) {
   data <- read_tsv(file)
@@ -22,7 +23,7 @@ process_file <- function(file) {
               max_aligned_length = max(aligned_length)) %>%
     ungroup()
   
-  output_file <- sub("recombinations.sorted.txt$", "count.txt", file)
+  output_file <- sub("sorted.txt$", "count.txt", file)  
   write_tsv(summarized_data, file = output_file)
 }
 
@@ -31,13 +32,17 @@ lapply(recomb_files, process_file)
 # -----------------------------
 # STEP 2: Frequency calculation and filtering
 # -----------------------------
-coverage_files <- list.files(path = ".", pattern = "*_recombinations.coverage", full.names = TRUE)
-bed_files <- list.files(path = ".", pattern = "*_count.txt", full.names = TRUE)
+
+coverage_files <- list.files(path = ".", pattern = "*.coverage", full.names = TRUE)  
+
+bed_files <- list.files(path = ".", pattern = "*count.txt", full.names = TRUE)
 
 for(i in seq_along(coverage_files)){
   coverage_file <- coverage_files[i]
-  base_name <- gsub("_recombinations\\.coverage$", "", basename(coverage_file))
-  bed_pattern <- paste0(base_name, "_count\\.txt")
+
+  base_name <- gsub("\\.coverage$", "", basename(coverage_file))  
+
+  bed_pattern <- paste0(base_name, "count\\.txt")  
   bed_file <- bed_files[grepl(pattern = bed_pattern, bed_files)]
   
   if(length(bed_file) == 0){
@@ -74,7 +79,8 @@ for(i in seq_along(coverage_files)){
       data_forward$max_left_overhang > 34,
   ]
   
-  write.table(data_forward, file = paste0(base_name, "_0.01_5_20_2_34.txt"), sep = "\t", row.names = FALSE)
+  output_table <- paste0(base_name, "_0.01_5_20_2_34.txt")
+  write.table(data_forward, file = output_table, sep = "\t", row.names = FALSE)
   
   plot <- ggplot(data_forward, aes(end, start, alpha = logFreq)) + 
     geom_point(size = 2, color = "blue") + 
@@ -91,7 +97,8 @@ for(i in seq_along(coverage_files)){
                            labels = c("-2.0", "-1.5", "-1.0", "-0.5", "0"))
   
   print(plot)
-  ggsave(filename = paste0(base_name, "_0.01_5_20_2_34_blue.tiff"), plot = plot,
+
+  output_plot <- paste0(base_name, "_0.01_5_20_2_34_blue.tiff")
+  ggsave(filename = output_plot, plot = plot,
          scale = 1, width = 4.5, height = 4, units = "in", dpi = 1200, limitsize = TRUE)
 }
-
