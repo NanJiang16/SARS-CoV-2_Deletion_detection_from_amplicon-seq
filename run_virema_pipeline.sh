@@ -31,11 +31,17 @@ MIN_ALIGNED_LENGTH=75
 OUTDIR="ViReMa25_SARS2_${SAMPLE_NAME}"
 OUTPUT_TAG="ViReMa25_SARS2_${SAMPLE_NAME}"
 
+# R summarization script
+RUN_R_SUMMARY=true    # set to false to skip R step
+R_SUMMARY_SCRIPT="../deletion_summarization_and_further_filtration.R"
+# NOTE: above assumes the R script is in the parent directory of OUTDIR;
+#       adjust as needed (e.g., "./deletion_summarization_and_further_filtration.R")
+
 #######################
 # Script begins
 #######################
 
-echo ">>> Running pipeline for sample: ${SAMPLE_NAME}"
+echo ">>> Running ViReMa pipeline for sample: ${SAMPLE_NAME}"
 mkdir -p "${OUTDIR}"
 
 ########################################
@@ -137,7 +143,24 @@ samtools depth -a -m 0 \
   "${OUTDIR}/${OUTPUT_TAG}_recombinations.sorted.bam" \
   > "${OUTDIR}/${OUTPUT_TAG}_recombinations.coverage"
 
-echo ">>> Pipeline finished for sample: ${SAMPLE_NAME}"
-echo "    - Deletions table: ${OUTDIR}/filtered_${OUTPUT_TAG}_standardized_recombinations.sorted.txt"
+echo ">>> ViReMa pipeline finished for sample: ${SAMPLE_NAME}"
+echo "    - Deletion table: ${OUTDIR}/filtered_${OUTPUT_TAG}_standardized_recombinations.sorted.txt"
 echo "    - Coverage file:  ${OUTDIR}/${OUTPUT_TAG}_recombinations.coverage"
-echo ">>> Use deletion_summarization_and_further_filtration.R for final summarization and plotting."
+
+########################################
+# 9. Run R summarization / further filtration
+########################################
+if [ "${RUN_R_SUMMARY}" = true ]; then
+  echo ">>> Step 9: Running R summarization script in ${OUTDIR}"
+  if [ ! -f "${R_SUMMARY_SCRIPT}" ]; then
+    echo "ERROR: R summarization script not found: ${R_SUMMARY_SCRIPT}" >&2
+    exit 1
+  fi
+  (
+    cd "${OUTDIR}"
+    Rscript "${R_SUMMARY_SCRIPT}"
+  )
+  echo ">>> R summarization completed for sample: ${SAMPLE_NAME}"
+else
+  echo ">>> Skipping R summarization step (RUN_R_SUMMARY=false)."
+fi
