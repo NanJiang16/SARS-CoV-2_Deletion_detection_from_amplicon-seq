@@ -7,7 +7,7 @@ set -euo pipefail
 
 # Sample identifiers
 SRA="SRRXXXXXXX"          # Folder name and FASTQ prefix
-NAME="sample_star_"       # STAR output prefix (can be anything; will prepend to Aligned.out files)
+NAME="sample_star_"       # STAR output prefix (will be used by STAR and downstream)
 
 # Input FASTQ files (untrimmed, paired-end)
 R1_FASTQ="./${SRA}/${SRA}_1.fastq"
@@ -32,6 +32,10 @@ MIN_DELETION_LENGTH=20
 MAX_OVERHANG_PRIMER_FRAC=1
 MIN_ALIGNED_LENGTH=75
 MAX_PRIMER_DIST=1
+
+# R summarization script 
+RUN_R_SUMMARY=true    # set to false to skip R step
+R_SUMMARY_SCRIPT="./deletion_summarization_and_further_filtration.R"
 
 #######################
 # Script begins
@@ -155,7 +159,21 @@ samtools depth -a -m 0 \
   "filtered_${NAME}_annotated_standardizationAligned.out.sorted.bam" \
   > "filtered_${NAME}_annotated_standardizationAligned.out.sorted.coverage"
 
-echo ">>> Pipeline finished for sample: ${SRA}"
+echo ">>> STAR pipeline finished for sample: ${SRA}"
 echo "    - Deletion table: filtered_${NAME}_annotated_standardizationAligned.deletion.sorted.txt"
 echo "    - Coverage file:  filtered_${NAME}_annotated_standardizationAligned.out.sorted.coverage"
-echo ">>> Use deletion_summarization_and_further_filtration.R with these outputs for final filtering and plotting."
+
+########################################
+# 9. Run R summarization / further filtration 
+########################################
+if [ "${RUN_R_SUMMARY}" = true ]; then
+  echo ">>> Step 9: Running R summarization script: ${R_SUMMARY_SCRIPT}"
+  if [ ! -f "${R_SUMMARY_SCRIPT}" ]; then
+    echo "ERROR: R summarization script not found: ${R_SUMMARY_SCRIPT}" >&2
+    exit 1
+  fi
+  Rscript "${R_SUMMARY_SCRIPT}"
+  echo ">>> R summarization completed for sample(s) in current directory."
+else
+  echo ">>> Skipping R summarization step (RUN_R_SUMMARY=false)."
+fi
