@@ -9,15 +9,12 @@
 * `annotate_alignment_with_primers.py` - Annotates an alignment file with information about the closest upstream/downstream primer to each read as well as the fraction of the read's alignment that is to primer regions.
 * `extract_primer_info.py` - Extracts primer information from a primer-annotated alignment file.
 * `deletion_summarization_and_further_filtration.R` - Summarizes read deletions (output from `extract_deletions.py`), calculates their frequencies using coverage information, and exclude deletion junctions with: Frequency < 0.01, Depth < 5, MinCov (smaller depth at the deletion start and stop positions) < 21, Maximum overhang on either end ('max_right_overhang' or 'max_left_overhang') < 31, Depth of positive or negative strands < 3.
-BASH Pipeline Scripts
+###BASH Pipeline Scripts
 This repository includes three executable BASH scripts that automate the full environment setup and analysis workflows:
-setup_env.sh
-Creates and configures the Conda environment required for both STAR- and ViReMa-based pipelines. This script installs all necessary tools, dependencies, and Python packages to ensure a fully reproducible analysis environment.
-run_virema_pipeline.sh
-Implements the complete ViReMa analysis workflow, including adapter trimming, read interleaving, ViReMa alignment, alignment standardization, filtering, deletion extraction, and optional downstream summarization using the R script. This pipeline is designed for recombination/deletion detection using ViReMa (v0.25).
-run_star_pipeline.sh
-Runs the STAR-based pipeline following the parameters of Wong et al., including trimming, STAR alignment, deletion standardization, primer-aware filtering, deletion extraction, coverage computation, and optional R-based summarization.
-Each script contains user-configurable variables at the top, allowing users to easily specify sample names, file paths, and parameter settings for their own datasets.
+* `setup_env.sh` - Creates and configures the Conda environment required for both STAR- and ViReMa-based pipelines. This script installs all necessary tools, dependencies, and Python packages to ensure a fully reproducible analysis environment.
+* `run_virema_pipeline.sh` - Implements the complete ViReMa analysis workflow, including adapter trimming, read interleaving, ViReMa alignment, alignment standardization, filtering, deletion extraction, and optional downstream summarization using the R script. This pipeline is designed for recombination/deletion detection using ViReMa (v0.25).
+* `run_star_pipeline.sh` - Runs the STAR-based pipeline following the parameters of Wong et al., including trimming, STAR alignment, deletion standardization, primer-aware filtering, deletion extraction, coverage computation, and optional R-based summarization.
+* Each script contains user-configurable variables at the top, allowing users to easily specify sample names, file paths, and parameter settings for their own datasets.
 
 ## Python modules
 
