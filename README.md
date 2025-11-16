@@ -14,7 +14,7 @@ This repository includes three executable BASH scripts that automate the full en
 * `setup_env.sh` - Creates and configures the Conda environment required for both STAR- and ViReMa-based pipelines. This script installs all necessary tools, dependencies, and Python packages to ensure a fully reproducible analysis environment.
 * `run_virema_pipeline.sh` - Implements the complete ViReMa analysis workflow, including adapter trimming, read interleaving, ViReMa alignment, alignment standardization, filtering, deletion extraction, and optional downstream summarization using the R script. This pipeline is designed for recombination/deletion detection using ViReMa (v0.25).
 * `run_star_pipeline.sh` - Runs the STAR-based pipeline following the parameters of Wong et al., including trimming, STAR alignment, deletion standardization, primer-aware filtering, deletion extraction, coverage computation, and optional R-based summarization.
-* Each script contains user-configurable variables at the top, allowing users to easily specify sample names, file paths, and parameter settings for their own datasets.
+  Each script contains user-configurable variables at the top, allowing users to easily specify sample names, file paths, and parameter settings for their own datasets.
 
 ## Python modules
 
